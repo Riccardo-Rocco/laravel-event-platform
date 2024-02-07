@@ -19,6 +19,12 @@
                                             <li>{{ $tag->name }}</li>
                                         @endforeach
                                     </ul>
+
+                                    <a href="{{ route('admin.posts.edit', $post->id) }}" class="btn btn-primary">Modifica</a>
+                            <form action="{{ route('admin.posts.destroy', $post->id) }}" method="POST" style="display: inline-block;">
+                                @csrf
+                                @method('DELETE')
+                                <button type="submit" class="btn btn-danger">Elimina</button>
                                 @else
                                     <span>Non ci sono tag collegati</span>
                                 @endif

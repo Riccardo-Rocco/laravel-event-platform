@@ -7,6 +7,7 @@ use App\Models\Post;
 use App\Models\Tag;
 use App\Models\Category;
 use App\Http\Requests\PostRequest;
+use Illuminate\Http\Request;
 
 class PostController extends Controller
 {
@@ -63,17 +64,30 @@ class PostController extends Controller
     /**
      * Show the form for editing the specified resource.
      */
-    public function edit(Post $post)
+    public function edit($id)
     {
-        //
+        $post = Post::findOrFail($id);
+        $categories = Category::all(); 
+        $tags = tag::all();
+
+        return view('admin.posts.edit', compact('post', 'categories', 'tags'));
     }
+
 
     /**
      * Update the specified resource in storage.
      */
-    public function update(PostRequest $request, Post $post)
+    public function update(Request $request, Post $post)
     {
-        //
+        $request->validate([
+            'name' => 'required',
+            'description' => 'required',
+            
+        ]);
+
+        $post->update($request->all());
+
+        return redirect()->route('admin.posts.index')->with('success', 'Post aggiornato con successo.');
     }
 
     /**
@@ -81,6 +95,8 @@ class PostController extends Controller
      */
     public function destroy(Post $post)
     {
-        //
+        $post->delete();
+    
+        return redirect()->route('admin.posts.index')->with('success', 'Post eliminato con successo.');
     }
 }
