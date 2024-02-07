@@ -1,7 +1,8 @@
 <?php
 
 use Illuminate\Support\Facades\Route;
-use App\Http\Controllers\Admin\DashboardController; //<---- Import del controller precedentemente creato!
+use App\Http\Controllers\Admin\DashboardController;
+use App\Http\Controllers\Admin\PostController;
 
 /*
 |--------------------------------------------------------------------------
@@ -18,15 +19,20 @@ Route::get('/', function () {
     return view('welcome');
 });
 
-Route::middleware(['auth'])
-    ->prefix('admin') //definisce il prefisso "admin/" per le rotte di questo gruppo
-    ->name('admin.') //definisce il pattern con cui generare i nomi delle rotte cioè "admin.qualcosa"
-    ->group(function () {
-
-        //Siamo nel gruppo quindi:
-        // - il percorso "/" diventa "admin/"
-        // - il nome della rotta ->name("dashboard") diventa ->name("admin.dashboard")
+Route::middleware(['auth'])->group(function () {
+    Route::prefix('admin')->name('admin.')->group(function () {
         Route::get('/', [DashboardController::class, 'index'])->name('dashboard');
+
+        // Rotte per la gestione dei post
+        Route::prefix('posts')->name('posts.')->group(function () {
+            Route::get('/create', [PostController::class, 'create'])->name('create');
+            Route::post('/', [PostController::class, 'store'])->name('store');
+
+            
+        });
+
+    
     });
+});
 
 require __DIR__ . '/auth.php';
