@@ -24,14 +24,8 @@ Route::middleware(['auth'])->group(function () {
         Route::get('/', [DashboardController::class, 'index'])->name('dashboard');
 
         // Rotte per la gestione dei post
-        Route::prefix('posts')->name('posts.')->group(function () {
-            Route::get('/create', [PostController::class, 'create'])->name('create');
-            Route::post('/', [PostController::class, 'store'])->name('store');
+        Route::resource('posts', PostController::class)->except(['show']); // Utilizza il resource controller per i post
 
-            
-        });
-
-    
     });
 });
 
